@@ -5,6 +5,36 @@ const jwt = require('jsonwebtoken');
 const register = async (req, res) => {
   const { name, email, password, role } = req.body;
 
+
+// All field required
+  if (!name || !email || !password) {
+    return res.status(400).json(
+      {
+       msg: 'All fields are required' 
+      });
+  }
+
+  // Name must be of 4 char
+  if (name.trim().length < 4) {
+    return res.status(400).json(
+      { msg: 'Name must be at least 4 characters' }
+    );
+  }
+
+  //Password must be of min 6
+ if (password.length < 6) {
+    return res.status(400).json(
+      { msg: 'Password must be at least 6 characters long' }
+    );
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json(
+      { msg: 'Please enter a valid email address' }
+    );
+  }
+
   try {
     let user = await User.findOne({ email });
     if (user) return res.status(400).json({ msg: 'User already exists' });
@@ -25,10 +55,12 @@ const register = async (req, res) => {
 
     await user.save();
 
-    res.json({ success: true, msg: 'Registration successful! Wait for approval.' });
+    res.json({ success: true, msg: 'Registration successful! Please Wait for approval.' });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ msg: 'Server error' });
+    res.status(500).json(
+      { msg: 'Server error.Please Try again latter' }
+    );
   }
 };
 
