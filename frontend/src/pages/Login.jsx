@@ -27,7 +27,7 @@ export default function Login({ setUser }) {
   return (
     <div style={{ textAlign: 'center', marginTop: '100px' }}>
       <h1 style={{ fontSize: '2.5rem', color: '#4f46e5' }}>NextGen Learning Hub</h1>
-      <h2>Login</h2>
+      <h2 className='text-3xl font-bold text-black-500'>Login</h2>
       <input id="email" placeholder="Email" style={{ padding: 12, width: 320, margin: 10, fontSize: 16 }} /><br/>
       <input id="password" type="password" placeholder="Password" style={{ padding: 12, width: 320, margin: 10, fontSize: 16 }} /><br/>
       <button onClick={handleLogin} style={{ padding: '14px 50px', fontSize: 18, background: '#4f46e5', color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer' }}>

@@ -34,7 +34,7 @@ export default function AdminPanel() {
 
   return (
     <div style={{ padding: 50 }}>
-      <h1>Admin Panel - User Management</h1>
+      <h1 className='text-4xl font-bold text-blue-900'>Admin Panel - User Management</h1>
       <button onClick={fetchUsers} style={{ padding: 10, marginBottom: 20 }}>Refresh List</button>
 
       <table border="1" style={{ width: '100%', textAlign: 'center' }}>
@@ -71,7 +71,7 @@ export default function AdminPanel() {
       </table>
 
       <br /><br />
-      <button onClick={() => { localStorage.clear(); window.location.href = '/' }}>
+      <button className='bg-red-600 hover:bg-red-700 transition-all duration-300 text-white px-5 py-2 rounded-lg shadow-md' onClick={() => { localStorage.clear(); window.location.href = '/' }}>
         Logout
       </button>
     </div>
