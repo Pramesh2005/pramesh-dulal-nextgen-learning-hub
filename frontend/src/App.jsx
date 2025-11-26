@@ -8,6 +8,9 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import About from './pages/About.jsx'
 import Contact from './pages/Contact.jsx';
+import Landing from './static/Landing.jsx';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -36,12 +39,15 @@ function App() {
   if (!user) {
     return (
       <BrowserRouter>
+      <Navbar/>
         <Routes>
+          <Route path="/" element={<Landing/>} />
           <Route path="/register" element={<Register />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/*" element={<Login setUser={setUser} />} />
         </Routes>
+        <Footer/>
       </BrowserRouter>
     );
   }

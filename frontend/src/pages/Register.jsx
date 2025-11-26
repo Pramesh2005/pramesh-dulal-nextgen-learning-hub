@@ -36,7 +36,7 @@ export default function Register() {
         <option value="teacher">Teacher</option>
       </select><br/>
       <button onClick={handleRegister} style={{ padding: 15, fontSize: 16 }}>Register</button>
-      <p><a href="/">Back to Login</a></p>
+      <p><a href="/">Back to Home</a></p>
     </div>
   );
 }

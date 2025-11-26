@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-white py-6 mt-12">
+    <footer className="bg-gray-900 text-white py-6 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="mb-8">
           <h2 className="text-3xl font-bold mb-4">NextGen Learning Hub</h2>

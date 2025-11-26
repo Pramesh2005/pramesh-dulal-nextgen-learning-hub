@@ -77,7 +77,7 @@ export default function Navbar() {
             ) : (
               <div className="flex space-x-3">
                 <Link
-                  to="/"
+                  to="/login"
                   className="bg-white text-indigo-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition"
                 >
                   Login

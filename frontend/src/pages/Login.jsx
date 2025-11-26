@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+
 
 export default function Login({ setUser }) {
   const navigate = useNavigate();
@@ -27,8 +26,7 @@ export default function Login({ setUser }) {
   };
 
   return (
- <>
- <Navbar/>  
+ 
     <div style={{ textAlign: 'center', marginTop: '100px' }}>
      
       <h1 style={{ fontSize: '2.5rem', color: '#4f46e5' }}>NextGen Learning Hub</h1>
@@ -53,8 +51,7 @@ export default function Login({ setUser }) {
       </p>
       
     </div>
-<Footer/> 
-    </>
+
 
    
    
