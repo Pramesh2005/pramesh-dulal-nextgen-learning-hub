@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 export default function Login({ setUser }) {
   const navigate = useNavigate();
@@ -25,7 +27,10 @@ export default function Login({ setUser }) {
   };
 
   return (
+ <>
+ <Navbar/>  
     <div style={{ textAlign: 'center', marginTop: '100px' }}>
+     
       <h1 style={{ fontSize: '2.5rem', color: '#4f46e5' }}>NextGen Learning Hub</h1>
       <h2 className='text-3xl font-bold text-black-500'>Login</h2>
       <input id="email" placeholder="Email" style={{ padding: 12, width: 320, margin: 10, fontSize: 16 }} /><br/>
@@ -46,6 +51,12 @@ export default function Login({ setUser }) {
           Register here
         </span>
       </p>
+      
     </div>
+<Footer/> 
+    </>
+
+   
+   
   );
 }

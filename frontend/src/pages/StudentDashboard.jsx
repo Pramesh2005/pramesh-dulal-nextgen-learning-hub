@@ -5,7 +5,7 @@ export default function StudentDashboard() {
       <p>Your account is active. 
         Dashboard coming soon!</p>
         <h4>Coding....</h4>
-      <button onClick={() => { localStorage.clear(); window.location.href = '/' }}>Logout</button>
+      <button className="bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-2 rounded-lg hover:from-red-600 hover:to-red-700 transition-colors duration-300" onClick={() => { localStorage.clear(); window.location.href = '/' }}>Logout</button>
     </div>
   );
 }
