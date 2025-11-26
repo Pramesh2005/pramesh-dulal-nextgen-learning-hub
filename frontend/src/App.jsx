@@ -11,6 +11,7 @@ import Contact from './pages/Contact.jsx';
 import Landing from './static/Landing.jsx';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -34,40 +35,33 @@ function App() {
   }, []);
 
   if (loading) return <div style={{textAlign:'center', marginTop:'200px'}}><h1>Loading...</h1></div>;
-
-  // THIS LINE FIXES THE BUG — ONLY SHOW LOGIN/REGISTER IF NOT LOGGED IN
-  if (!user) {
     return (
       <BrowserRouter>
-      <Navbar/>
+      <Navbar user={user} setUser={setUser}/>
         <Routes>
-          <Route path="/" element={<Landing/>} />
-          <Route path="/register" element={<Register />} />
+        <Route path="/" element={
+          user?.role === 'admin' ? <Navigate to="/admin" /> :
+          user?.role === 'teacher' ? <Navigate to="/teacher" /> :
+          user?.role === 'student' ? <Navigate to="/student" /> :
+          <Landing />
+        } />
+
+        
+          <Route path="/register" element={user? <Navigate to="/" /> : <Register />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/*" element={<Login setUser={setUser} />} />
+
+          <Route path="/login" element={user ? <Navigate to="/" /> : <Login setUser={setUser} />} />
+
+          <Route path="/admin" element={user?.role === 'admin' ? <AdminPanel /> : <Navigate to="/" />} />
+          <Route path="/student" element={user?.role === 'student' ? <StudentDashboard /> : <Navigate to="/" />} />
+          <Route path="/teacher" element={user?.role === 'teacher' ? <TeacherDashboard /> : <Navigate to="/" />} />
+
         </Routes>
         <Footer/>
       </BrowserRouter>
     );
   }
 
-  // USER IS LOGGED IN → GO TO CORRECT DASHBOARD
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={
-          user.role === 'admin' ? <Navigate to="/admin" /> :
-          user.role === 'teacher' ? <Navigate to="/teacher" /> :
-          <Navigate to="/student" />
-        } />
-        <Route path="/admin" element={<AdminPanel />} />
-        <Route path="/student" element={<StudentDashboard />} />
-        <Route path="/teacher" element={<TeacherDashboard />} />
-        <Route path="/register" element={<Navigate to="/" />} />
-      </Routes>
-    </BrowserRouter>
-  );
-}
 
 export default App;

@@ -21,59 +21,85 @@ export default function AdminPanel() {
     axios.put(`http://localhost:5000/api/users/approve/${id}`, {}, {
       headers: { Authorization: `Bearer ${token}` }
     })
-    .then(() => fetchUsers());
+    .then(fetchUsers);
   };
 
   const reject = (id) => {
     axios.put(`http://localhost:5000/api/users/reject/${id}`, {}, {
       headers: { Authorization: `Bearer ${token}` }
     })
-    .then(() => fetchUsers())
+    .then(fetchUsers)
     .catch(err => console.log("Reject failed:", err));
   };
 
   return (
-    <div style={{ padding: 50 }}>
-      <h1 className='text-4xl font-bold text-blue-900'>Admin Panel - User Management</h1>
-      <button onClick={fetchUsers} style={{ padding: 10, marginBottom: 20 }}>Refresh List</button>
+    <div className="p-6 md:p-12 bg-gray-100 min-h-screen">
 
-      <table border="1" style={{ width: '100%', textAlign: 'center' }}>
-        <thead style={{ background: '#333', color: 'white' }}>
-          <tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th></tr>
-        </thead>
-        <tbody>
-          {users.map(u => (
-            <tr key={u._id}>
-              <td>{u.name}</td>
-              <td>{u.email}</td>
-              <td>{u.role}</td>
-              <td style={{ 
-                fontWeight: 'bold',
-                color: u.status === 'active' ? 'green' : u.status === 'blocked' ? 'red' : 'orange'
-              }}>
-                {u.status.toUpperCase()}
-              </td>
-              <td>
-                {u.status === 'pending' && (
-                  <>
-                    <button onClick={() => approve(u._id)} style={{ background:'green', color:'white', margin:5, padding:'8px 15px' }}>
-                      Approve
-                    </button>
-                    <button onClick={() => reject(u._id)} style={{ background:'red', color:'white', margin:5, padding:'8px 15px' }}>
-                      Reject
-                    </button>
-                  </>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <h1 className="text-center text-3xl md:text-4xl font-bold text-black-900 mb-6">
+        Admin Panel - User Management
+      </h1>
 
-      <br /><br />
-      <button className='bg-red-600 hover:bg-red-700 transition-all duration-300 text-white px-5 py-2 rounded-lg shadow-md' onClick={() => { localStorage.clear(); window.location.href = '/' }}>
-        Logout
+      {/* Refresh Button */}
+      <button
+        onClick={fetchUsers}
+        className="mb-6 bg-blue-600 hover:bg-blue-700 transition text-white px-6 py-2 rounded-lg shadow-md"
+      >
+        Refresh List
       </button>
+
+      {/* Table Wrapper */}
+      <div className="overflow-x-auto bg-white rounded-lg shadow-md">
+        <table className="w-full text-sm text-center border-collapse">
+          <thead className="bg-gray-900 text-white">
+            <tr>
+              <th className="p-3">Name</th>
+              <th className="p-3">Email</th>
+              <th className="p-3">Role</th>
+              <th className="p-3">Status</th>
+              <th className="p-3">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {users.map(u => (
+              <tr key={u._id} className="border-b hover:bg-gray-50">
+                <td className="p-3">{u.name}</td>
+                <td className="p-3">{u.email}</td>
+                <td className="p-3 capitalize">{u.role}</td>
+
+                <td className={`p-3 font-bold
+                    ${u.status === 'active' ? 'text-green-600' :
+                      u.status === 'blocked' ? 'text-red-600' :
+                      'text-orange-500'}
+                `}>
+                  {u.status.toUpperCase()}
+                </td>
+
+                <td className="p-3">
+                  {u.status === 'pending' && (
+                    <div className="flex justify-center gap-2">
+                      <button
+                        onClick={() => approve(u._id)}
+                        className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded shadow"
+                      >
+                        Approve
+                      </button>
+
+                      <button
+                        onClick={() => reject(u._id)}
+                        className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded shadow"
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+
+        </table>
+      </div>
     </div>
   );
 }
