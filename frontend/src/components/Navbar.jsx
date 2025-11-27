@@ -1,26 +1,12 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import logo from '../assets/logo.png'
-export default function Navbar({user, setUser}) {
-  // const [user, setUser] = useState(null);
+import { Link, useNavigate } from "react-router-dom";
+import logo from "../assets/logo.png";
+export default function Navbar({ user, setUser }) {
   const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   const token = localStorage.getItem('token');
-  //   if (token) {
-  //     axios.get('http://localhost:5000/api/auth/me', {
-  //       headers: { Authorization: `Bearer ${token}` }
-  //     })
-  //     .then(res => setUser(res.data.user))
-  //     .catch(() => localStorage.removeItem('token'));
-  //   }
-  // }, []);
 
   const handleLogout = () => {
     localStorage.clear();
     setUser(null);
-    navigate('/');
+    navigate("/");
   };
 
   return (
@@ -37,31 +23,80 @@ export default function Navbar({user, setUser}) {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link
-              to="/"
-              className="text-white hover:text-indigo-200 transition"
-            >
-              Home
-            </Link>
-            <Link
-              to="/about"
-              className="text-white hover:text-indigo-200 transition"
-            >
-              About
-            </Link>
-            <Link
-              to="/contact"
-              className="text-white hover:text-indigo-200 transition"
-            >
-              Contact
-            </Link>
+            {!user && (
+              <Link
+                to="/"
+                className="text-white hover:text-indigo-200 transition"
+              >
+                Home
+              </Link>
+            )}
+
+            {!user && (
+              <>
+                <Link
+                  to="/about"
+                  className="text-white hover:text-indigo-200 transition"
+                >
+                  About
+                </Link>
+                <Link
+                  to="/contact"
+                  className="text-white hover:text-indigo-200 transition"
+                >
+                  Contact
+                </Link>
+              </>
+            )}
+
+            {user?.role && user.role.toUpperCase().includes("ADMIN") && (
+              <>
+                <Link to="/admin" className="text-white hover:text-indigo-200">
+                  Dashboard
+                </Link>
+                <Link to="" className="text-white hover:text-indigo-200">
+                  Users
+                </Link>
+                <Link to="" className="text-white hover:text-indigo-200">
+                  Courses
+                </Link>
+              </>
+            )}
+
+            {user?.role && user.role.toUpperCase().includes("TEACHER") && (
+              <>
+                <Link
+                  to="/teacher"
+                  className="text-white hover:text-indigo-200"
+                >
+                  Dashboard
+                </Link>
+                <Link to="" className="text-white hover:text-indigo-200">
+                  My Classes
+                </Link>
+              </>
+            )}
+
+            {user?.role && user.role.toUpperCase().includes("STUDENT") && (
+              <>
+                <Link
+                  to="/student"
+                  className="text-white hover:text-indigo-200"
+                >
+                  Dashboard
+                </Link>
+                <Link to="" className="text-white hover:text-indigo-200">
+                  My Courses
+                </Link>
+              </>
+            )}
 
             {user ? (
               <div className="flex items-center space-x-4">
                 <span className="text-white">
                   Hi,{" "}
                   <span className="font-bold capitalize">
-                    {user.name.split(" ")[0]}
+                    {user.name?.split(" ")[0]}
                   </span>
                   <span className="ml-2 bg-white/20 px-3 py-1 rounded-full text-xs">
                     {user.role}
