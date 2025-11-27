@@ -16,7 +16,7 @@ export default function About() {
   return (
     <div className="bg-gray-50 text-gray-800">
 
-      {/* HERO Section */}
+      {/* ================= HERO ================= */}
       <section
         className="relative text-white py-24 px-6 text-center"
         style={{ backgroundImage: `url(${contactHero})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
@@ -32,7 +32,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* OUR STORY  */}
+      {/* ================= OUR STORY ================= */}
       <section className="py-12 px-6 max-w-6xl mx-auto">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Our Story</h2>
         <div className="space-y-16 md:space-y-24">
@@ -66,7 +66,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* FEATURES */}
+      {/* ================= FEATURES ================= */}
       <section className="py-12 px-6 max-w-7xl mx-auto">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Platform Highlights</h2>
         <div className="grid md:grid-cols-3 gap-8 md:gap-12">
