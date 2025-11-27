@@ -6,8 +6,8 @@ import StudentDashboard from './pages/StudentDashboard.jsx';
 import TeacherDashboard from './pages/TeacherDashboard.jsx';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import About from './pages/About.jsx'
-import Contact from './pages/Contact.jsx';
+import About from './static/About.jsx'
+import Contact from './static/Contact.jsx';
 import Landing from './static/Landing.jsx';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
