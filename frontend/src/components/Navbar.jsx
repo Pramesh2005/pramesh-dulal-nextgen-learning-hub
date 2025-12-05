@@ -57,8 +57,8 @@ export default function Navbar({ user, setUser }) {
                 <Link to="" className="text-white hover:text-indigo-200">
                   Users
                 </Link>
-                <Link to="" className="text-white hover:text-indigo-200">
-                  Courses
+                <Link to="/create-subject" className="text-white hover:text-indigo-200">
+                  Subject
                 </Link>
               </>
             )}
@@ -71,8 +71,8 @@ export default function Navbar({ user, setUser }) {
                 >
                   Dashboard
                 </Link>
-                <Link to="" className="text-white hover:text-indigo-200">
-                  My Classes
+                <Link to="/teacher-subject" className="text-white hover:text-indigo-200">
+                 Classes
                 </Link>
               </>
             )}
@@ -85,7 +85,7 @@ export default function Navbar({ user, setUser }) {
                 >
                   Dashboard
                 </Link>
-                <Link to="" className="text-white hover:text-indigo-200">
+                <Link to="/student-course" className="text-white hover:text-indigo-200">
                   My Courses
                 </Link>
               </>

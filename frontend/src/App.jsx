@@ -11,6 +11,9 @@ import Contact from './static/Contact.jsx';
 import Landing from './static/Landing.jsx';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import CreateSubject from './pages/admin/CreateSubject.jsx';
+import TeacherSubject from './pages/teacher/Subject.jsx'
+import StudentCourse from './pages/students/StudentCourse.jsx'
 
 function App() {
   const [user, setUser] = useState(null);
@@ -50,6 +53,10 @@ function App() {
           <Route path="/register" element={user? <Navigate to="/" /> : <Register />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/create-subject" element={<CreateSubject />} />
+          <Route path="/teacher-subject" element={<TeacherSubject />} />
+          <Route path="/student-course" element={<StudentCourse />} />
+
 
           <Route path="/login" element={user ? <Navigate to="/" /> : <Login setUser={setUser} />} />
 
