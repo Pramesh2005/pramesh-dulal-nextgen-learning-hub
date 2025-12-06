@@ -54,8 +54,8 @@ export default function Navbar({ user, setUser }) {
                 <Link to="/admin" className="text-white hover:text-indigo-200">
                   Dashboard
                 </Link>
-                <Link to="" className="text-white hover:text-indigo-200">
-                  Users
+                <Link to="/admin/uploads" className="text-white hover:text-indigo-200">
+                  Tracker
                 </Link>
                 <Link to="/create-subject" className="text-white hover:text-indigo-200">
                   Subject

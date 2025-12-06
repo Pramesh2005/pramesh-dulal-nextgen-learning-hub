@@ -12,6 +12,7 @@ import Landing from './static/Landing.jsx';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CreateSubject from './pages/admin/CreateSubject.jsx';
+import UploadTracker from './pages/admin/UploadTracker.jsx';
 import TeacherSubject from './pages/teacher/Subject.jsx'
 import StudentCourse from './pages/students/StudentCourse.jsx'
 
@@ -56,6 +57,7 @@ function App() {
           <Route path="/create-subject" element={<CreateSubject />} />
           <Route path="/teacher-subject" element={<TeacherSubject />} />
           <Route path="/student-course" element={<StudentCourse />} />
+          <Route path="/admin/uploads" element={<UploadTracker />} />
 
 
           <Route path="/login" element={user ? <Navigate to="/" /> : <Login setUser={setUser} />} />
