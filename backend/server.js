@@ -15,6 +15,8 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/user'));
 app.use('/api/subjects', require('./routes/subject'));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/api/notices', require('./routes/noticeRoutes'));
+
 
 app.get('/', (req, res) => {
   res.send('NextGen Learning Hub API Running');

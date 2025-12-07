@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
-import AdminPanel from './pages/AdminPanel.jsx';
-import StudentDashboard from './pages/StudentDashboard.jsx';
-import TeacherDashboard from './pages/TeacherDashboard.jsx';
+import AdminPanel from './pages/admin/AdminPanel.jsx';
+import StudentDashboard from './pages/students/StudentDashboard.jsx';
+import TeacherDashboard from './pages/teacher/TeacherDashboard.jsx';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import About from './static/About.jsx'
