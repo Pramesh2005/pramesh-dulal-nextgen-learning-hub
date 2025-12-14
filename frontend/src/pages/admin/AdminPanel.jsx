@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import NoticeBoard from "../../components/NoticeBoard";
 import NoticeManager from "../../components/NoticeManager";
-
+import Sidebar from "../../components/Sidebar";
 export default function AdminPanel() {
   const [users, setUsers] = useState([]);
   const token = localStorage.getItem("token");
@@ -46,7 +46,11 @@ export default function AdminPanel() {
   };
 
   return (
-    <div className="p-6 md:p-12 bg-gray-100 min-h-screen">
+    <div className="flex">
+<Sidebar/>
+   
+    <div className="flex-1 p-6 md:p-12 bg-gray-50 min-h-screen">
+      
       <h1 className="text-center text-3xl md:text-4xl font-bold text-black-900 mb-6">
         Admin Panel - User Management
       </h1>
@@ -60,7 +64,7 @@ export default function AdminPanel() {
       </button>
 
       {/* Table Wrapper */}
-      <div className="overflow-x-auto bg-white rounded-lg shadow-md">
+      <div className="overflow-x-auto bg-white rounded-lg shadow-md p-4">
         <table className="w-full text-sm text-center border-collapse">
           <thead className="bg-gray-900 text-white">
             <tr>
@@ -120,5 +124,6 @@ export default function AdminPanel() {
       <NoticeManager />
       <NoticeBoard />
     </div>
+     </div>
   );
 }
