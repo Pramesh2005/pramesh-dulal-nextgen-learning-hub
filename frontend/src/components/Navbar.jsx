@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
+import { HiLogout } from "react-icons/hi";
 export default function Navbar({ user, setUser }) {
   const navigate = useNavigate();
 
@@ -54,10 +55,16 @@ export default function Navbar({ user, setUser }) {
                 <Link to="/admin" className="text-white hover:text-indigo-200">
                   Dashboard
                 </Link>
-                <Link to="/admin/uploads" className="text-white hover:text-indigo-200">
+                <Link
+                  to="/admin/uploads"
+                  className="text-white hover:text-indigo-200"
+                >
                   Tracker
                 </Link>
-                <Link to="/create-subject" className="text-white hover:text-indigo-200">
+                <Link
+                  to="/create-subject"
+                  className="text-white hover:text-indigo-200"
+                >
                   Subject
                 </Link>
               </>
@@ -71,8 +78,11 @@ export default function Navbar({ user, setUser }) {
                 >
                   Dashboard
                 </Link>
-                <Link to="/teacher-subject" className="text-white hover:text-indigo-200">
-                 Classes
+                <Link
+                  to="/teacher-subject"
+                  className="text-white hover:text-indigo-200"
+                >
+                  Classes
                 </Link>
               </>
             )}
@@ -85,29 +95,52 @@ export default function Navbar({ user, setUser }) {
                 >
                   Dashboard
                 </Link>
-                <Link to="/student-course" className="text-white hover:text-indigo-200">
+                <Link
+                  to="/student-course"
+                  className="text-white hover:text-indigo-200"
+                >
                   My Courses
                 </Link>
               </>
             )}
 
             {user ? (
-              <div className="flex items-center space-x-4">
-                <span className="text-white">
-                  Hi,{" "}
-                  <span className="font-bold capitalize">
-                    {user.name?.split(" ")[0]}
-                  </span>
-                  <span className="ml-2 bg-white/20 px-3 py-1 rounded-full text-xs">
-                    {user.role}
-                  </span>
-                </span>
-                <button
-                  onClick={handleLogout}
-                  className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg transition"
-                >
-                  Logout
-                </button>
+              <div className="flex items-center gap-4">
+                {/* Hi box with dropdown */}
+                <div className="relative group">
+                  <button className="flex items-center gap-2 text-white font-semibold px-4 py-2 rounded-lg bg-white/20 hover:bg-white/30 transition">
+                    Hi, {user.name?.split(" ")[0]}
+                    <span className="ml-1 bg-white/30 px-2 py-0.5 rounded-full text-xs">
+                      {user.role}
+                    </span>
+                  </button>
+
+                  {/* Dropdown */}
+                  <div className="absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all z-50">
+                    <Link
+                      to="/profile"
+                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-t-lg"
+                    >
+                      Profile
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-t-lg"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </div>
+
+                {/* Always visible logout button */}
+               <button
+  onClick={handleLogout}
+  className="w-full px-3 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl transition flex items-center gap-2"
+>
+  <HiLogout className="text-xl text-white" />
+  <span className="font-medium">Logout</span>
+</button>
+
               </div>
             ) : (
               <div className="flex space-x-3">
