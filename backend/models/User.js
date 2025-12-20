@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
     enum: ['pending', 'active', 'blocked'], 
     default: 'pending' 
   },
-  avatar: { type: String, default: '' },
+  avatar: { type: String, default: null },
   xp: { type: Number, default: 0 }
 }, { timestamps: true });
 

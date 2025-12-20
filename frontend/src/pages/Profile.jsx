@@ -87,14 +87,51 @@ export default function Profile() {
             <div className="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
 
             {/* Avatar */}
-            <div className="relative z-10 group">
-              <div className="w-36 h-36 md:w-44 md:h-44 bg-gradient-to-tr from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white text-5xl md:text-6xl font-bold shadow-lg transition-transform hover:scale-105">
-                {capitalizeFirstLetter(user.name).charAt(0)}
-              </div>
-              <button className="absolute bottom-2 right-2 bg-white p-2 md:p-3 rounded-full shadow-md hover:scale-110 transition duration-300">
-                <HiCamera className="text-indigo-600 text-lg md:text-xl" />
-              </button>
-            </div>
+           <div className="relative group">
+  <div className="w-36 h-36 md:w-44 md:h-44 rounded-full overflow-hidden ring-8 ring-white/50 shadow-2xl">
+   <img
+  src={user.avatar ? `http://localhost:5000${user.avatar}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff&size=200&rounded=true&bold=true`}
+  alt="Profile"
+  className="w-full h-full object-cover rounded-full"
+  onError={(e) => {
+    e.currentTarget.onerror = null; 
+    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff&size=200&rounded=true&bold=true`;
+  }}
+/>
+
+  </div>
+  <label className="absolute bottom-2 right-2 bg-white p-3 rounded-full shadow-lg cursor-pointer hover:scale-110 transition">
+    <HiCamera className="text-indigo-600 text-xl" />
+    <input
+      type="file"
+      accept="image/*"
+      className="hidden"
+      onChange={async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('avatar', file);
+
+        try {
+          const res = await axios.put('http://localhost:5000/api/users/avatar', formData, {
+            headers: {
+              Authorization: `Bearer ${localStorage.token}`,
+              'Content-Type': 'multipart/form-data'
+            }
+          });
+
+          if (res.data.success) {
+            setUser({ ...user, avatar: res.data.avatar });
+            alert('Profile picture updated!');
+          }
+        } catch (err) {
+          alert(err.response?.data?.msg || 'Upload failed');
+        }
+      }}
+    />
+  </label>
+</div>
 
             {/* User Info */}
             <div className="text-center md:text-left flex-1 z-10 text-white drop-shadow-md space-y-2">

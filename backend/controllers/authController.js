@@ -103,7 +103,7 @@ const login = async (req, res) => {
 
 const getMe = async (req, res) => {
   const user = await User.findById(req.user.id).select('-password');
-  res.json({ user: { name: user.name, email: user.email, role: user.role } });
+  res.json({ user: { name: user.name, email: user.email, role: user.role, avatar:user.avatar ||null } });
 };
 
 
