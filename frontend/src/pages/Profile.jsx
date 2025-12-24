@@ -112,6 +112,47 @@ export default function Profile() {
     localStorage.clear();
     window.location.href = "/";
   };
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [changingPassword, setChangingPassword] = useState(false);
+
+  const handleChangePassword = async () => {
+    if (!oldPassword || !newPassword) {
+      alert("Both old and new passwords are required");
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      alert("New password must be at least 6 characters");
+      return;
+    }
+
+    setChangingPassword(true);
+
+    try {
+      //   trimmed values
+      const res = await axios.put(
+        "http://localhost:5000/api/users/change-password",
+        {
+          oldPassword: oldPassword.trim(),
+          newPassword: newPassword.trim(),
+        },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+
+      alert(res.data.msg);
+      setOldPassword("");
+      setNewPassword("");
+      setShowPasswordModal(false);
+    } catch (err) {
+      alert(err.response?.data?.msg || "Failed to change password");
+    } finally {
+      setChangingPassword(false);
+    }
+  };
 
   const capitalizeFirstLetter = (str) => {
     if (!str) return "";
@@ -190,8 +231,8 @@ export default function Profile() {
                       );
 
                       if (res.data.success) {
-                        setUser(res.data.user); 
-                        setNickname(res.data.user.nickname || ""); 
+                        setUser(res.data.user);
+                        setNickname(res.data.user.nickname || "");
                         alert("Profile picture updated!");
                       }
                     } catch (err) {
@@ -293,6 +334,45 @@ export default function Profile() {
               )}
             </div>
           </div>
+          {showPasswordModal && (
+            <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+              <div className="bg-white rounded-xl p-6 w-96">
+                <h3 className="text-xl font-bold mb-4">Change Password</h3>
+
+                <input
+                  type="password"
+                  placeholder="Old Password"
+                  value={oldPassword}
+                  onChange={(e) => setOldPassword(e.target.value)}
+                  className="w-full px-4 py-2 mb-3 border rounded-lg"
+                />
+
+                <input
+                  type="password"
+                  placeholder="New Password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="w-full px-4 py-2 mb-3 border rounded-lg"
+                />
+
+                <div className="flex justify-end gap-2 mt-2">
+                  <button
+                    onClick={() => setShowPasswordModal(false)}
+                    className="px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleChangePassword}
+                    disabled={changingPassword}
+                    className="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-50"
+                  >
+                    {changingPassword ? "Saving..." : "Save"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Settings Section */}
           <div className="border-t pt-8">
@@ -308,7 +388,10 @@ export default function Profile() {
                 <span className="font-medium">Update Profile Picture</span>
               </button>
 
-              <button className="w-full px-6 py-4 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-xl hover:from-indigo-200 hover:to-purple-200 transition flex items-center gap-4">
+              <button
+                onClick={() => setShowPasswordModal(true)}
+                className="w-full px-6 py-4 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-xl hover:from-indigo-200 hover:to-purple-200 transition flex items-center gap-4"
+              >
                 <HiLockClosed className="text-xl text-indigo-600" />
                 <span className="font-medium">Change Password</span>
               </button>

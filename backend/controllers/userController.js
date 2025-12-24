@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const { protect, admin } = require("../middleware/auth");
-
+const bcrypt = require("bcryptjs");
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.find().select("-password");
@@ -107,6 +107,43 @@ const updateNickname = async (req, res) => {
     res.status(500).json({ msg: "Server error" });
   }
 };
+// Change password
 
+const changePassword = async (req, res) => {
+  try {
+    let { oldPassword, newPassword } = req.body;
 
-module.exports = { getAllUsers, approveUser, rejectUser, updateAvatar, updateNickname};
+    // Trim spaces
+    oldPassword = oldPassword?.trim();
+    newPassword = newPassword?.trim();
+
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({ msg: "Both old and new passwords are required" });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ msg: "New password must be at least 6 characters long" });
+    }
+
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ msg: "Old password is incorrect" });
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+
+    res.json({ success: true, msg: "Password changed successfully" });
+  } catch (err) {
+    console.error("Change password error:", err);
+    res.status(500).json({ msg: "Server error" });
+  }
+};
+
+module.exports = { getAllUsers, approveUser, rejectUser, updateAvatar, updateNickname,changePassword};
