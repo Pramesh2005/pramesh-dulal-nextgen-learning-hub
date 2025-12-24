@@ -102,10 +102,14 @@ const login = async (req, res) => {
 
 
 const getMe = async (req, res) => {
-  const user = await User.findById(req.user.id).select('-password');
-  res.json({ user: { name: user.name, email: user.email, role: user.role, avatar:user.avatar ||null } });
+  try {
+    const user = await User.findById(req.user.id).select('-password'); // fetch full user
+    res.json({ user }); 
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: 'Server error' });
+  }
 };
-
 
 
 module.exports = { register, login, getMe };

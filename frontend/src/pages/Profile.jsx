@@ -15,6 +15,7 @@ export default function Profile() {
   const [user, setUser] = useState(null);
   const [editingNickname, setEditingNickname] = useState(false);
   const [nickname, setNickname] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -35,19 +36,75 @@ export default function Profile() {
   }, []);
 
   const handleNicknameUpdate = async () => {
+    const cleanNickname = nickname.trim();
+
+    if (!cleanNickname) {
+      alert("Nickname is required");
+      return;
+    }
+
+    if (cleanNickname.length < 3 || cleanNickname.length > 20) {
+      alert("Nickname must be 3–20 characters long");
+      return;
+    }
+
+    if (!/^[a-zA-Z0-9_]+$/.test(cleanNickname)) {
+      alert("Nickname can contain only letters, numbers, and _");
+      return;
+    }
+
+    setSaving(true);
     try {
-      await axios.put(
+      const res = await axios.put(
         "http://localhost:5000/api/users/update-nickname",
-        { nickname },
+        { nickname: cleanNickname },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
-      setUser({ ...user, nickname });
+
+      setUser(res.data.user);
+      setNickname(res.data.user.nickname || "");
       setEditingNickname(false);
       alert("Nickname updated successfully!");
     } catch (err) {
-      alert("Failed to update nickname");
+      alert(err.response?.data?.msg || "Failed to update nickname");
+    } finally {
+      setSaving(false);
+    }
+  };
+  const canEditNickname = () => {
+    if (!user.nicknameUpdatedAt) return true;
+
+    const lastUpdate = new Date(user.nicknameUpdatedAt);
+    const hoursPassed = (Date.now() - lastUpdate) / (1000 * 60 * 60);
+
+    return hoursPassed >= 24; // only allow edit if >= 24 hours
+  };
+
+  const handleAvatarUpload = async (file) => {
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("avatar", file);
+
+    try {
+      const res = await axios.put(
+        "http://localhost:5000/api/users/avatar",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      // full updated user
+      setUser(res.data.user);
+      alert("Profile picture updated!");
+    } catch (err) {
+      alert(err.response?.data?.msg || "Upload failed");
     }
   };
 
@@ -87,51 +144,63 @@ export default function Profile() {
             <div className="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
 
             {/* Avatar */}
-           <div className="relative group">
-  <div className="w-36 h-36 md:w-44 md:h-44 rounded-full overflow-hidden ring-8 ring-white/50 shadow-2xl">
-   <img
-  src={user.avatar ? `http://localhost:5000${user.avatar}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff&size=200&rounded=true&bold=true`}
-  alt="Profile"
-  className="w-full h-full object-cover rounded-full"
-  onError={(e) => {
-    e.currentTarget.onerror = null; 
-    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff&size=200&rounded=true&bold=true`;
-  }}
-/>
+            <div className="relative group">
+              <div className="w-36 h-36 md:w-44 md:h-44 rounded-full overflow-hidden ring-8 ring-white/50 shadow-2xl">
+                <img
+                  src={
+                    user.avatar
+                      ? `http://localhost:5000${user.avatar}`
+                      : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                          user.name
+                        )}&background=6366f1&color=fff&size=200&rounded=true&bold=true`
+                  }
+                  alt="Profile"
+                  className="w-full h-full object-cover rounded-full"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                      user.name
+                    )}&background=6366f1&color=fff&size=200&rounded=true&bold=true`;
+                  }}
+                />
+              </div>
+              <label className="absolute bottom-2 right-2 bg-white p-3 rounded-full shadow-lg cursor-pointer hover:scale-110 transition">
+                <HiCamera className="text-indigo-600 text-xl" />
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
 
-  </div>
-  <label className="absolute bottom-2 right-2 bg-white p-3 rounded-full shadow-lg cursor-pointer hover:scale-110 transition">
-    <HiCamera className="text-indigo-600 text-xl" />
-    <input
-      type="file"
-      accept="image/*"
-      className="hidden"
-      onChange={async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
+                    const formData = new FormData();
+                    formData.append("avatar", file);
 
-        const formData = new FormData();
-        formData.append('avatar', file);
+                    try {
+                      const res = await axios.put(
+                        "http://localhost:5000/api/users/avatar",
+                        formData,
+                        {
+                          headers: {
+                            Authorization: `Bearer ${localStorage.token}`,
+                            "Content-Type": "multipart/form-data",
+                          },
+                        }
+                      );
 
-        try {
-          const res = await axios.put('http://localhost:5000/api/users/avatar', formData, {
-            headers: {
-              Authorization: `Bearer ${localStorage.token}`,
-              'Content-Type': 'multipart/form-data'
-            }
-          });
-
-          if (res.data.success) {
-            setUser({ ...user, avatar: res.data.avatar });
-            alert('Profile picture updated!');
-          }
-        } catch (err) {
-          alert(err.response?.data?.msg || 'Upload failed');
-        }
-      }}
-    />
-  </label>
-</div>
+                      if (res.data.success) {
+                        setUser(res.data.user); 
+                        setNickname(res.data.user.nickname || ""); 
+                        alert("Profile picture updated!");
+                      }
+                    } catch (err) {
+                      alert(err.response?.data?.msg || "Upload failed");
+                    }
+                  }}
+                />
+              </label>
+            </div>
 
             {/* User Info */}
             <div className="text-center md:text-left flex-1 z-10 text-white drop-shadow-md space-y-2">
@@ -149,19 +218,25 @@ export default function Profile() {
                     <input
                       value={nickname}
                       onChange={(e) => setNickname(e.target.value)}
-                      className="px-4 py-2 border rounded-lg text-lg md:text-xl focus:outline-indigo-400"
-                      placeholder="Nickname"
+                      className="px-4 py-2 border rounded-lg text-black text-lg focus:outline-indigo-400"
+                      placeholder="Enter nickname"
                     />
-                    <div className="flex gap-2 mt-1 md:mt-0">
+
+                    <div className="flex gap-2">
                       <button
                         onClick={handleNicknameUpdate}
-                        className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
+                        disabled={saving}
+                        className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 disabled:opacity-50"
                       >
-                        Save
+                        {saving ? "Saving..." : "Save"}
                       </button>
+
                       <button
-                        onClick={() => setEditingNickname(false)}
-                        className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition"
+                        onClick={() => {
+                          setNickname(user.nickname || "");
+                          setEditingNickname(false);
+                        }}
+                        className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
                       >
                         Cancel
                       </button>
@@ -173,8 +248,23 @@ export default function Profile() {
                       ({nickname || "No Nickname"})
                     </span>
                     <button
-                      onClick={() => setEditingNickname(true)}
-                      className="text-indigo-200 hover:underline ml-2"
+                      onClick={() => {
+                        if (canEditNickname()) {
+                          setEditingNickname(true);
+                        } else {
+                          alert(
+                            "You can change nickname only once every 24 hours"
+                          );
+                          localStorage.clear();
+                          window.location.href = "/";
+                        }
+                      }}
+                      className={`text-indigo-200 ml-2 ${
+                        !canEditNickname()
+                          ? "opacity-50 cursor-not-allowed"
+                          : "hover:underline"
+                      }`}
+                      disabled={!canEditNickname()}
                     >
                       Edit Nickname
                     </button>
@@ -189,7 +279,10 @@ export default function Profile() {
 
               {/* Verified / Role */}
               <div className="flex items-center gap-2 text-white transition">
-                <HiShieldCheck /> <span className="font-semibold capitalize text-l">{user.role}</span>
+                <HiShieldCheck />{" "}
+                <span className="font-semibold capitalize text-l">
+                  {user.role}
+                </span>
               </div>
 
               {/* XP for students */}

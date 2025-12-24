@@ -29,6 +29,19 @@ const userSchema = new mongoose.Schema({
     enum: ['pending', 'active', 'blocked'], 
     default: 'pending' 
   },
+  nickname: {
+  type: String,
+  trim: true,
+  minlength: 3,
+  maxlength: 20,
+  unique: true,
+  sparse: true, // allows empty nicknames
+},
+
+nicknameUpdatedAt: {
+  type: Date,
+},
+
   avatar: { type: String, default: null },
   xp: { type: Number, default: 0 }
 }, { timestamps: true });
