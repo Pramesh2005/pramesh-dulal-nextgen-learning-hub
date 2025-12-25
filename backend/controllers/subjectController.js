@@ -73,12 +73,25 @@ const uploadPdf = async (req, res) => {
 
     subject.pdfs.push({
       title,
-      fileUrl: `/uploads/${req.file.filename}`, // your file path
+      fileUrl: `/uploads/${req.file.filename}`, // file path
       uploadedBy: req.user.id
     });
 
     await subject.save();
-    res.json({ success: true, subject });
+
+// get last inserted pdf (the one just uploaded)
+const savedPdf = subject.pdfs[subject.pdfs.length - 1];
+
+res.json({
+  success: true,
+  message: "PDF uploaded successfully",
+  pdf: {
+    _id: savedPdf._id,
+    title: savedPdf.title,
+    fileUrl: savedPdf.fileUrl
+  }
+});
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ msg: "Server error" });
