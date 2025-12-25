@@ -211,34 +211,8 @@ export default function Profile() {
                   type="file"
                   accept="image/*"
                   className="hidden"
-                  onChange={async (e) => {
-                    const file = e.target.files[0];
-                    if (!file) return;
+                onChange={(e) => handleAvatarUpload(e.target.files[0])}
 
-                    const formData = new FormData();
-                    formData.append("avatar", file);
-
-                    try {
-                      const res = await axios.put(
-                        "http://localhost:5000/api/users/avatar",
-                        formData,
-                        {
-                          headers: {
-                            Authorization: `Bearer ${localStorage.token}`,
-                            "Content-Type": "multipart/form-data",
-                          },
-                        }
-                      );
-
-                      if (res.data.success) {
-                        setUser(res.data.user);
-                        setNickname(res.data.user.nickname || "");
-                        alert("Profile picture updated!");
-                      }
-                    } catch (err) {
-                      alert(err.response?.data?.msg || "Upload failed");
-                    }
-                  }}
                 />
               </label>
             </div>
