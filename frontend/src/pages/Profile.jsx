@@ -378,9 +378,21 @@ export default function Profile() {
           <div className="border-t pt-8">
             <h3 className="text-2xl font-bold mb-6">Settings</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <button className="w-full px-6 py-4 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-xl hover:from-indigo-200 hover:to-purple-200 transition flex items-center gap-4">
+              <button
+                onClick={() => {
+                  if (canEditNickname()) {
+                    setEditingNickname(true);
+                  } else {
+                    alert("You can change nickname only once every 24 hours");
+                  }
+                }}
+                className={`w-full px-6 py-4 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-xl hover:from-indigo-200 hover:to-purple-200 transition flex items-center gap-4 ${
+                  !canEditNickname() ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                disabled={!canEditNickname()}
+              >
                 <HiUser className="text-xl text-indigo-600" />
-                <span className="font-medium">Change Name</span>
+                <span className="font-medium">Change Nick Name</span>
               </button>
 
               <button className="w-full px-6 py-4 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-xl hover:from-indigo-200 hover:to-purple-200 transition flex items-center gap-4">
