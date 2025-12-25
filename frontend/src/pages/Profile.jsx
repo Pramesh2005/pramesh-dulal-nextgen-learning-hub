@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import {
   HiCamera,
@@ -16,6 +16,7 @@ export default function Profile() {
   const [editingNickname, setEditingNickname] = useState(false);
   const [nickname, setNickname] = useState("");
   const [saving, setSaving] = useState(false);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -208,11 +209,11 @@ export default function Profile() {
               <label className="absolute bottom-2 right-2 bg-white p-3 rounded-full shadow-lg cursor-pointer hover:scale-110 transition">
                 <HiCamera className="text-indigo-600 text-xl" />
                 <input
+                  ref={fileInputRef}
                   type="file"
                   accept="image/*"
                   className="hidden"
-                onChange={(e) => handleAvatarUpload(e.target.files[0])}
-
+                  onChange={(e) => handleAvatarUpload(e.target.files[0])}
                 />
               </label>
             </div>
@@ -369,7 +370,10 @@ export default function Profile() {
                 <span className="font-medium">Change Nick Name</span>
               </button>
 
-              <button className="w-full px-6 py-4 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-xl hover:from-indigo-200 hover:to-purple-200 transition flex items-center gap-4">
+              <button
+                onClick={() => fileInputRef.current.click()}
+                className="w-full px-6 py-4 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-xl hover:from-indigo-200 hover:to-purple-200 transition flex items-center gap-4"
+              >
                 <HiCamera className="text-xl text-indigo-600" />
                 <span className="font-medium">Update Profile Picture</span>
               </button>
