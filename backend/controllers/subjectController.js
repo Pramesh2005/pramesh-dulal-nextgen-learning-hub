@@ -1,5 +1,4 @@
 const Subject = require('../models/Subject');
-
 // ADMIN: Create Subject
 const createSubject = async (req, res) => {
   const { name, description } = req.body;
@@ -73,7 +72,7 @@ const uploadPdf = async (req, res) => {
 
     subject.pdfs.push({
       title,
-      fileUrl: `/uploads/${req.file.filename}`, // file path
+      fileUrl: `/uploads/${req.file.filename}`, //  file path
       uploadedBy: req.user.id
     });
 
@@ -91,7 +90,6 @@ res.json({
     fileUrl: savedPdf.fileUrl
   }
 });
-
   } catch (err) {
     console.error(err);
     res.status(500).json({ msg: "Server error" });
