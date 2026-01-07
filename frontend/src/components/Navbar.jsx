@@ -95,6 +95,12 @@ export default function Navbar({ user, setUser }) {
                 >
                   Dashboard
                 </Link>
+                 <Link
+                  to="/student-available-exam"
+                  className="text-white hover:text-indigo-200"
+                >
+                  Exams
+                </Link>
                 <Link
                   to="/student-course"
                   className="text-white hover:text-indigo-200"
