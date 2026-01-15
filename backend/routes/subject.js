@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { protect, admin } = require('../middleware/auth');
-const { createSubject, getSubjects,updateSubject,deleteSubject, uploadPdf } = require('../controllers/subjectController');
+const { createSubject, getSubjects,updateSubject,deleteSubject, uploadPdf,deletePdf } = require('../controllers/subjectController');
 const multer = require("multer");
 const Subject = require('../models/Subject'); 
 
@@ -25,6 +25,12 @@ router.delete('/:id', protect, admin, deleteSubject);
 
 // Teacher route: upload PDF
 router.post("/upload-pdf", protect, upload.single("file"), uploadPdf);
+router.delete(
+  "/:subjectId/pdf/:pdfId",
+  protect,
+  deletePdf
+);
+
 // Admin: View all uploads
 router.get('/uploads/all', protect, admin, async (req, res) => {
   try {

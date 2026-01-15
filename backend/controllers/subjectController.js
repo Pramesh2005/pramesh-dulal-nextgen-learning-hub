@@ -95,6 +95,35 @@ res.json({
     res.status(500).json({ msg: "Server error" });
   }
 };
+// DELETE PDF (Teacher & Admin)
+const deletePdf = async (req, res) => {
+  const { subjectId, pdfId } = req.params;
+
+  try {
+    const subject = await Subject.findById(subjectId);
+    if (!subject) return res.status(404).json({ msg: "Subject not found" });
+
+    const pdf = subject.pdfs.id(pdfId);
+    if (!pdf) return res.status(404).json({ msg: "PDF not found" });
+
+    // ROLE CHECK
+    if (
+      req.user.role !== "admin" &&
+      pdf.uploadedBy.toString() !== req.user.id
+    ) {
+      return res.status(403).json({ msg: "Not authorized to delete this PDF" });
+    }
+
+    // Remove PDF from array
+    pdf.deleteOne();
+    await subject.save();
+
+    res.json({ success: true, msg: "PDF deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Server error" });
+  }
+};
 
 
-module.exports = { createSubject, getSubjects, updateSubject, deleteSubject, uploadPdf };
+module.exports = { createSubject, getSubjects, updateSubject, deleteSubject, uploadPdf,deletePdf };

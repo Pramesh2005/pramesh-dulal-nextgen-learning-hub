@@ -78,6 +78,27 @@ const handleConfirmGenerate = async () => {
     setShowPdf(true);
   };
 
+  const handleDeletePdf = async (subjectId, pdfId) => {
+  if (!window.confirm("Are you sure you want to delete this PDF?")) return;
+
+  try {
+    await axios.delete(
+      `http://localhost:5000/api/subjects/${subjectId}/pdf/${pdfId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+
+    alert("PDF deleted successfully");
+    loadSubjects(); // refresh UI
+  } catch (err) {
+    alert(err.response?.data?.msg || "Delete failed");
+  }
+};
+
+
   return (
     <div className="max-w-5xl mx-auto p-8">
       <h1 className="text-3xl font-bold text-center mb-8">Teacher Dashboard</h1>
@@ -149,6 +170,12 @@ const handleConfirmGenerate = async () => {
                   >
                     View PDF
                   </button>
+                  <button
+    onClick={() => handleDeletePdf(subject._id, pdf._id)}
+    className="px-6 py-3 bg-red-600 text-white rounded-lg"
+  >
+    Delete PDF
+  </button>
                  {!pdf.mcqs || pdf.mcqs.length === 0 ? (
   <button
     onClick={() => setConfirmGenerate({ subjectId: subject._id, pdfId: pdf._id })}
