@@ -14,9 +14,9 @@ export default function Sidebar() {
   const [open, setOpen] = useState(false); // sidebar hidden by default
 
   const menuItems = [
-    { name: "Dashboard", icon: <HiHome />, path: "/dashboard" },
-    { name: "Users", icon: <HiUsers />, path: "/" },
-    { name: "Notices", icon: <HiClipboardList />, path: "/" },
+    { name: "Dashboard", icon: <HiHome />, path: "/admin" },
+    { name: "Users", icon: <HiUsers />, path: "/userManagement" },
+    { name: "Notices", icon: <HiClipboardList />, path: "/adminNotice" },
     { name: "Settings", icon: <HiCog />, path: "/" },
     { name: "Logout", icon: <HiLogout />, path: "/" },
   ];

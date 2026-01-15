@@ -27,6 +27,25 @@ const rejectUser = async (req, res) => {
     res.status(500).json({ msg: "Server error" });
   }
 };
+const blockUser = async (req, res) => {
+  try {
+    await User.findByIdAndUpdate(req.params.id, { status: "blocked" });
+    res.json({ success: true, msg: "User blocked successfully" });
+  } catch (err) {
+    console.error("Block user error:", err);
+    res.status(500).json({ msg: "Server error" });
+  }
+};
+
+const unblockUser = async (req, res) => {
+  try {
+    await User.findByIdAndUpdate(req.params.id, { status: "active" });
+    res.json({ success: true, msg: "User unblocked successfully" });
+  } catch (err) {
+    console.error("Unblock user error:", err);
+    res.status(500).json({ msg: "Server error" });
+  }
+};
 
 const updateAvatar = async (req, res) => {
   try {
@@ -146,4 +165,4 @@ const changePassword = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, approveUser, rejectUser, updateAvatar, updateNickname,changePassword};
+module.exports = { getAllUsers, approveUser, rejectUser, updateAvatar, updateNickname,changePassword,blockUser,unblockUser};

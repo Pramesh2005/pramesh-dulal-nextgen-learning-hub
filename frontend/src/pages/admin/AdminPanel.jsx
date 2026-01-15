@@ -1,14 +1,31 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Sidebar from "../../components/Sidebar";
 import NoticeBoard from "../../components/NoticeBoard";
 import NoticeManager from "../../components/NoticeManager";
-import Sidebar from "../../components/Sidebar";
+import axios from "axios";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+
 export default function AdminPanel() {
   const [users, setUsers] = useState([]);
+  const [courses, setCourses] = useState([]);
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchUsers();
+    fetchCourses();
   }, []);
 
   const fetchUsers = () => {
@@ -17,113 +34,157 @@ export default function AdminPanel() {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setUsers(res.data))
-      .catch((err) => console.log("Fetch error:", err));
+      .catch((err) => console.log("Users fetch error:", err));
   };
 
-  const approve = (id) => {
+  const fetchCourses = () => {
     axios
-      .put(
-        `http://localhost:5000/api/users/approve/${id}`,
-        {},
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-      .then(fetchUsers);
+      .get("http://localhost:5000/api/subjects/all", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => setCourses(res.data))
+      .catch((err) => console.log("Courses fetch error:", err));
   };
 
-  const reject = (id) => {
-    axios
-      .put(
-        `http://localhost:5000/api/users/reject/${id}`,
-        {},
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-      .then(fetchUsers)
-      .catch((err) => console.log("Reject failed:", err));
+  // Count users by role and status
+  const totalUsers = users.length;
+  const totalStudents = users.filter((u) => u.role === "student").length;
+  const totalTeachers = users.filter((u) => u.role === "teacher").length;
+  const totalAdmins = users.filter((u) => u.role === "admin").length;
+  const totalCourses = courses.length;
+  const activeUsers = users.filter((u) => u.status === "active").length;
+  const pendingUsers = users.filter((u) => u.status === "pending").length;
+  const blockedUsers = users.filter((u) => u.status === "blocked").length;
+
+  const userStatusData = [
+    { name: "Active", value: activeUsers },
+    { name: "Pending", value: pendingUsers },
+    { name: "Blocked", value: blockedUsers },
+  ];
+
+  const userRoleData = [
+    { name: "Students", value: totalStudents },
+    { name: "Teachers", value: totalTeachers },
+    { name: "Admins", value: totalAdmins },
+  ];
+
+  const COLORS = ["#4CAF50", "#FFA500", "#F44336"];
+  const ROLE_COLORS = ["#2196F3", "#9C27B0", "#FF5722"];
+
+  // Navigation with scroll to top
+  const goToPage = (path) => {
+    navigate(path);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <div className="flex">
-<Sidebar/>
-   
-    <div className="flex-1 p-6 md:p-12 bg-gray-50 min-h-screen">
-      
-      <h1 className="text-center text-3xl md:text-4xl font-bold text-black-900 mb-6">
-        Admin Panel - User Management
-      </h1>
+    <div className="flex min-h-screen bg-gray-100">
+      {/* Sidebar */}
+      <Sidebar />
 
-      {/* Refresh Button */}
-      <button
-        onClick={fetchUsers}
-        className="mb-6 bg-blue-600 hover:bg-blue-700 transition text-white px-6 py-2 rounded-lg shadow-md"
-      >
-        Refresh List
-      </button>
+      {/* Main Content */}
+      <div className="flex-1 p-6 md:p-12">
+        {/* Header */}
+        <h1 className="text-3xl md:text-4xl font-extrabold text-gray-800 mb-10 text-center">
+          Admin Dashboard
+        </h1>
 
-      {/* Table Wrapper */}
-      <div className="overflow-x-auto bg-white rounded-lg shadow-md p-4">
-        <table className="w-full text-sm text-center border-collapse">
-          <thead className="bg-gray-900 text-white">
-            <tr>
-              <th className="p-3">Name</th>
-              <th className="p-3">Email</th>
-              <th className="p-3">Role</th>
-              <th className="p-3">Status</th>
-              <th className="p-3">Actions</th>
-            </tr>
-          </thead>
+        {/* Notice Board */}
+        <div className="mb-10">
+          <NoticeBoard />
+        </div>
 
-          <tbody>
-            {users.map((u) => (
-              <tr key={u._id} className="border-b hover:bg-gray-50">
-                <td className="p-3">{u.name}</td>
-                <td className="p-3">{u.email}</td>
-                <td className="p-3 capitalize">{u.role}</td>
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-10">
+          {[
+            { title: "Total Users", value: totalUsers, color: "bg-blue-600" },
+            { title: "Students", value: totalStudents, color: "bg-green-600" },
+            { title: "Teachers", value: totalTeachers, color: "bg-purple-600" },
+            { title: "Admins", value: totalAdmins, color: "bg-red-600" },
+            { title: "Courses", value: totalCourses, color: "bg-yellow-500" },
+          ].map((stat, idx) => (
+            <div
+              key={idx}
+              className={`bg-white shadow-lg hover:shadow-2xl transition rounded-xl p-6 text-center cursor-pointer border-l-8 ${stat.color}`}
+            >
+              <h3 className="text-gray-500 text-sm mb-2">{stat.title}</h3>
+              <p className="text-3xl font-bold text-gray-800">{stat.value}</p>
+            </div>
+          ))}
+        </div>
 
-                <td
-                  className={`p-3 font-bold
-                    ${
-                      u.status === "active"
-                        ? "text-green-600"
-                        : u.status === "blocked"
-                        ? "text-red-600"
-                        : "text-orange-500"
-                    }
-                `}
+        {/* Charts */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+          <div className="bg-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition">
+            <h3 className="text-gray-700 font-semibold mb-4 text-center">
+              Users by Status
+            </h3>
+            <ResponsiveContainer width="100%" height={250}>
+              <PieChart>
+                <Pie
+                  data={userStatusData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  label
+                  // removed onClick to make it non-clickable
                 >
-                  {u.status.toUpperCase()}
-                </td>
+                  {userStatusData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+                <Legend verticalAlign="bottom" height={36} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
 
-                <td className="p-3">
-                  {u.status === "pending" && (
-                    <div className="flex justify-center gap-2">
-                      <button
-                        onClick={() => approve(u._id)}
-                        className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded shadow"
-                      >
-                        Approve
-                      </button>
+          <div className="bg-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition">
+            <h3 className="text-gray-700 font-semibold mb-4 text-center">
+              Users by Role
+            </h3>
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart
+                data={userRoleData}
+                margin={{ top: 20, right: 20, left: -10, bottom: 5 }}
+              >
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="value">
+                  {userRoleData.map((entry, index) => (
+                    <Cell
+                      key={`cell-role-${index}`}
+                      fill={ROLE_COLORS[index % ROLE_COLORS.length]}
+                    />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
 
-                      <button
-                        onClick={() => reject(u._id)}
-                        className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded shadow"
-                      >
-                        Reject
-                      </button>
-                    </div>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {/* Quick Actions */}
+        <div className="flex flex-wrap justify-center gap-4">
+          {[
+            { label: "Manage Users", path: "/userManagement", color: "bg-blue-600 hover:bg-blue-700" },
+            { label: "Add Notice", path: "/adminNotice", color: "bg-green-600 hover:bg-green-700" },
+            { label: "Manage Courses", path: "/create-subject", color: "bg-purple-600 hover:bg-purple-700" },
+          ].map((btn, idx) => (
+            <button
+              key={idx}
+              onClick={() => goToPage(btn.path)}
+              className={`${btn.color} text-white px-6 py-3 rounded-xl font-semibold shadow-lg transition transform hover:scale-105`}
+            >
+              {btn.label}
+            </button>
+          ))}
+        </div>
       </div>
-      <NoticeManager />
-      <NoticeBoard />
     </div>
-     </div>
   );
 }
