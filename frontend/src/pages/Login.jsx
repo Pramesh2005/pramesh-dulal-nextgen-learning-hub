@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FaUserGraduate, FaLock, FaGraduationCap, FaSpinner } from "react-icons/fa";
+import LoginPagePhoto from '../assets/login.png'; 
 
 export default function Login({ setUser }) {
   const navigate = useNavigate();
@@ -41,13 +42,13 @@ export default function Login({ setUser }) {
       {/* LEFT HERO */}
       <div className="hidden lg:flex w-1/2 relative items-center justify-center text-white px-16">
         <img
-          src="https://img.freepik.com/premium-photo/student-with-laptop-library_647963-5132.jpg"
+          src={LoginPagePhoto} 
           alt="Learning"
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/60"></div>
-        <div className="relative z-10 max-w-md">
-          <FaGraduationCap className="text-6xl mb-6 text-indigo-300" />
+        <div className="absolute inset-0 bg-black/60"></div> {/* dark overlay */}
+        <div className="relative z-10 max-w-md text-center lg:text-left">
+          <FaGraduationCap className="text-6xl mb-6 text-indigo-300 mx-auto lg:mx-0" />
           <h1 className="text-4xl font-extrabold mb-4">NextGen Learning Hub</h1>
           <p className="text-lg opacity-90 leading-relaxed">
             Learn. Grow. Succeed.
@@ -93,7 +94,6 @@ export default function Login({ setUser }) {
                   focus:ring-2 focus:ring-indigo-400/60
                   outline-none transition
                   selection:bg-indigo-400/40 selection:text-white
-                  /* Chrome autofill fix */
                   autofill:bg-transparent autofill:text-white
                   [-webkit-autofill]:bg-white/10
                   [-webkit-autofill]:text-white
