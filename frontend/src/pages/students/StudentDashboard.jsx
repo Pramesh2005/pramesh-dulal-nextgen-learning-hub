@@ -1,3 +1,4 @@
+import AssignmentNotice from "../../components/assignment/AssignmentNotice";
 import NoticeBoard from "../../components/NoticeBoard";
 
 export default function StudentDashboard() {
@@ -9,6 +10,8 @@ export default function StudentDashboard() {
         Dashboard coming soon!</p>
         <h4>Coding....</h4>
         <NoticeBoard /> 
+        <AssignmentNotice />
+
     </div>
    
   );
