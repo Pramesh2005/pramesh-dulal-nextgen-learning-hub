@@ -19,6 +19,7 @@ import Profile from "./pages/Profile.jsx";
 import AvailableExam from "./pages/students/AvailableExam.jsx"
 import UserManagement from "./pages/admin/UserManagement.jsx";
 import AdminNotice from "./pages/admin/AdminNotice.jsx";  
+import StudentAssignmentSubmit from "./pages/students/StudentAssignmentSubmit.jsx";
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -84,6 +85,16 @@ function App() {
         <Route path="/student-available-exam" element={<AvailableExam />} />
         <Route path="/userManagement" element={<UserManagement />} />
         <Route path="/adminNotice" element={<AdminNotice />} />
+<Route
+  path="/submit-assignment/:id"
+  element={
+    user?.role === "student" ? (
+      <StudentAssignmentSubmit />
+    ) : (
+      <Navigate to="/" />
+    )
+  }
+/>
 
 
         <Route

@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function AssignmentNotice() {
   const [assignments, setAssignments] = useState([]);
+const navigate = useNavigate();
 
   const loadAssignments = async () => {
     try {
@@ -45,9 +47,23 @@ export default function AssignmentNotice() {
                 <p>⏰ Deadline: {new Date(a.deadline).toLocaleString()}</p>
               </div>
 
-              <div className="mt-2 font-semibold text-green-600">
-             Submission Open
-              </div>
+              <div className="mt-2 flex justify-between items-center">
+  {new Date(a.deadline) > new Date() ? (
+    <>
+      <span className="font-semibold text-green-600">Submission Open</span>
+      <button
+        className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+        onClick={() => navigate(`/submit-assignment/${a._id}`)}
+      >
+        Submit Assignment
+      </button>
+    </>
+  ) : (
+    <span className="font-semibold text-red-600">Missed</span>
+  )}
+</div>
+
+
             </div>
           ))
       )}

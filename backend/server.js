@@ -18,6 +18,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/notices', require('./routes/noticeRoutes'));
 app.use('/api/mcq', require('./routes/mcq'));
 app.use("/api/assignments", require("./routes/assignmentRoutes"));
+app.use("/api/submissions", require("./routes/submissionRoutes"));
 
 
 app.get('/', (req, res) => {
