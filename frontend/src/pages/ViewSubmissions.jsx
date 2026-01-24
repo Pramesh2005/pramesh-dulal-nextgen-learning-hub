@@ -121,10 +121,10 @@ export default function ViewSubmissions() {
         <table className="w-full">
           <thead className="bg-gray-100">
             <tr>
-              <th className="p-4 text-left">Student</th>
+              <th className="p-4 text-left">Student Name</th>
               <th>Status</th>
               <th>Submitted At</th>
-              <th>Submission</th>
+              <th>Submission Document</th>
             </tr>
           </thead>
           <tbody>
