@@ -5,10 +5,9 @@ const uploadAssignment = require("../middleware/assignmentUpload");
 
 const Assignment = require("../models/Assignment");
 const Submission = require("../models/AssignmentSubmission");
+const { getTeacherSubmissions } = require("../controllers/submissionController");
 
-// -----------------------------
-// 1️⃣ Student submits assignment
-// -----------------------------
+//  Student submits assignment
 router.post(
   "/student",
   protect,
@@ -64,9 +63,7 @@ router.post(
   }
 );
 
-// ------------------------------------------
-// 2️⃣ Get all submissions (teacher/admin view)
-// ------------------------------------------
+//  Get all submissions (teacher/admin view)
 router.get("/", protect, async (req, res) => {
   try {
     const submissions = await Submission.find()
@@ -79,9 +76,8 @@ router.get("/", protect, async (req, res) => {
   }
 });
 
-// ---------------------------------------------------------
 // Get a single submission for a student by assignment
-// ---------------------------------------------------------
+
 router.get("/student/:assignmentId", protect, async (req, res) => {
   try {
     const submission = await Submission.findOne({
@@ -113,5 +109,7 @@ router.delete("/student/:submissionId", protect, async (req, res) => {
     res.status(500).json({ msg: err.message });
   }
 });
+// Teacher view - all students submissions for assignment
+router.get("/teacher", protect, getTeacherSubmissions);
 
 module.exports = router;
